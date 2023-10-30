@@ -17,6 +17,9 @@ import math
 import h5py
 import argparse
 
+import tf2onnx
+import onnx
+
    
 def pre_emphasis_filter(x, coeff=0.95):
     return tf.concat([x, x - coeff * x], 1)
@@ -178,6 +181,10 @@ def main(args):
     dset = grp.create_dataset("input_size", (1,), dtype='int16')
     dset[0] = input_size
     f.close()
+
+    # Create .onnx file
+    onnx_model, _ = tf2onnx.convert.from_keras(model)
+    onnx.save(onnx_model, 'Demo/Model/'+name+'/'+name + ".onnx")
 
     # Create Analysis Plots ###########################################
     if args.create_plots == 1:
