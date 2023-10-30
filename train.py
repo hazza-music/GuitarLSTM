@@ -19,7 +19,7 @@ import argparse
 
 import tf2onnx
 import onnx
-
+from model_utils import save_model
    
 def pre_emphasis_filter(x, coeff=0.95):
     return tf.concat([x, x - coeff * x], 1)
@@ -184,7 +184,9 @@ def main(args):
 
     # Create .onnx file
     onnx_model, _ = tf2onnx.convert.from_keras(model)
-    onnx.save(onnx_model, 'Demo/Model/'+name+'/'+name + ".onnx")
+    onnx.save(onnx_model, 'models\GuitarLSTM\GuitarLSTM.onnx')
+    # Create RTNeural .json file
+    save_model(model, 'models\GuitarLSTM\model_weights.json')
 
     # Create Analysis Plots ###########################################
     if args.create_plots == 1:
